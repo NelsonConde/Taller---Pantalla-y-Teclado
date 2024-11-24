@@ -18,17 +18,17 @@ inicio proc near
  call INDICACIONES
 
  SIGUIENTE:
- mov dh,14d
- mov dl,51d
+ mov dh,25d
+ mov dl,10d
  call UBICAR
  call TECLA
 
  cmp ah,01h  ; esc
  je FIN
  cmp ah,48H  ; flecha arriba
- je subir 
+ je arriba 
  cmp ah,50H  ; flecha abajo
- je bajar
+ je abajo
  cmp ah,4BH  ; flecha izquierda
  je izqui 
  cmp ah,4DH  ; flecha derecha
@@ -36,11 +36,11 @@ inicio proc near
  
  jmp SIGUIENTE
 
- subir:
+ arriba:
   call PINTARBLANCO
   jmp SIGUIENTE
  
- bajar:
+ abajo:
   call PINTARROJO
   jmp SIGUIENTE
 
