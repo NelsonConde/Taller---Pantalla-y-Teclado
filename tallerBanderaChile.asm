@@ -8,21 +8,18 @@
   msgFlechaIzquierda db "Izquierda: Franja azul", '$'
   msgFlechaDerecha db "Derecha: Estrella", '$'
   msgContinuar db "Presionelas para dibujar o ESC para salir", '$'
-  varValidar1 db 0b
-  varValidar2 db 0b
 
 .code
 
 inicio proc near
- MOV ax,@DATA
- MOV ds,ax   
- XOR ax,ax
+ mov ax,@data
+ mov ds,ax   
 
  call INDICACIONES
 
  SIGUIENTE:
- mov dh,33d
- mov dl,60d
+ mov dh,14d
+ mov dl,51d
  call UBICAR
  call TECLA
 
@@ -56,13 +53,13 @@ inicio proc near
   jmp SIGUIENTE
 
  FIN:
- call LIMPIARBANDERA
+ call LIMPIAR
 
  .exit
 inicio endp 
 
 INDICACIONES proc near
- call limpiar
+ call LIMPIAR
 
  mov dh,03d
  mov dl,08d
@@ -94,8 +91,8 @@ INDICACIONES proc near
  mov dx,offset msgFlechaDerecha
  call MOSTRAR
 
- mov dh,13d
- mov dl,10d
+ mov dh,14d
+ mov dl,09d
  call UBICAR 
  mov dx,offset msgContinuar
  call MOSTRAR
@@ -106,10 +103,15 @@ INDICACIONES endp
 PINTARBLANCO proc near
   mov ax,0600h
   mov bh,0f0h  ;color
-  mov ch,00d      ;inicio de color
-  mov cl,00d
-  mov dh,12d      ;final de color
-  mov dl,80d
+  
+  ;inicioPintar
+  mov ch,00d      ;fila
+  mov cl,00d      ;columna
+
+  ;finaPintar
+  mov dh,12d      ;fila
+  mov dl,80d      ;columna
+
 	int 10H               	
   ret 
 PINTARBLANCO endp
@@ -117,11 +119,12 @@ PINTARBLANCO endp
 ;****************************************
 PINTARROJO proc near
   mov ax,0600h
-  mov bh,40h  ;color
-  mov ch,13d
+  mov bh,40h  
+
+  mov ch,13d      
   mov cl,00d
-  mov dh,25d  ;fila      ;final de color
-  mov dl,80d  ;columna
+  mov dh,25d     
+  mov dl,80d 
 	int 10H               	
   ret 
 PINTARROJO endp
@@ -129,11 +132,12 @@ PINTARROJO endp
 ;****************************************
 PINTARAZUL proc near
   mov ax,0600h
-  mov bh,10h  ;color
-  mov ch,00d      
+  mov bh,10h  
+
+  mov ch,00d       
   mov cl,00d
-  mov dh,12d  ;fila      ;final de color
-  mov dl,26d  ;columna
+  mov dh,12d        
+  mov dl,26d  
 	int 10H               	
   ret 
 PINTARAZUL endp
@@ -141,15 +145,15 @@ PINTARAZUL endp
 ;****************************************
 PINTARESTRELLA proc near
   mov ax,0600h
-  mov bh,0f0h  ;color
+  mov bh,0f0h  
 
-  mov ch,02d      
+  mov ch,02d     
   mov cl,13d
   mov dh,02d
   mov dl,13d 
   int 10H
 
-  mov ch,03d      
+  mov ch,03d        
   mov cl,12d
   mov dh,04d
   mov dl,14d 
@@ -161,13 +165,13 @@ PINTARESTRELLA proc near
   mov dl,14d 
   int 10H
 
-  mov ch,05d      
+  mov ch,05d    
   mov cl,11d
   mov dh,05d
   mov dl,15d 
   int 10H
 
-  mov ch,06d      
+  mov ch,06d  
   mov cl,05d
   mov dh,06d
   mov dl,21d 
@@ -226,44 +230,37 @@ PINTARESTRELLA endp
 
 ;****************************************
 LIMPIAR proc near         
-  mov ax,0600h 
-  mov bh,0fh
-  mov cx,0000h                   
-  mov dx,184FH         	  
-  int 10h                  	
+  mov ax,0600h
+  mov bh,0fh      ;color
+  mov cx,0000h    ;inicioPintar
+  mov dx,184Fh    ;finPintar
+  int 10H         ;interrupcion BIOS
   ret                      	
 LIMPIAR endp
 
 ;****************************************
-LIMPIARBANDERA proc near         
-  mov ax,0600h 
-  mov bh,00h
-  mov cx,0000h                   
-  mov dx,184FH         	  
-  int 10h                  	
-  ret                      	
-LIMPIARBANDERA endp
+UBICAR proc near
+ ;ubica lo que este en DX
+ mov ah,02H       ;función de INT 10h para mover el cursor
+ mov bh,00H       ;selecciona de página activa
+ int 10H          ;interrupcion de BIOS
+ ret
+UBICAR endp
 
 ;****************************************
-UBICAR PROC NEAR
- mov ah,02H
- mov bh,00H
- INT 10H
- RET
-UBICAR ENDP
-
-;****************************************
-MOSTRAR PROC NEAR
- mov ah,9H
- int 21h
- RET
-MOSTRAR ENDP
+MOSTRAR proc near
+ ;muestra  lo que este en DX
+ mov ah,9H        ;función de INT 21h para mostrar una cadena de caracteres
+ int 21H          ;interrupción de DOS
+ ret
+MOSTRAR endp
 
 ;****************************************
 TECLA proc near  
-  mov ah,10H
-  int 16h  
-  ret
+ ;caracter almacenado en AH
+ mov ah,10H       ;función de INT 16h para manejar el teclado
+ int 16H          ;interrupcion de BIOS
+ ret
 TECLA endp
 
 end inicio
