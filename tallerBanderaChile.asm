@@ -2,12 +2,12 @@
 .386
 .stack 64
 .data
-  msgIndicaciones db 10d,13d,'  Para que aparezca la bandera presione las flechas:',10d,10d,13d,'$'
-  msgFlechaArriba db '       Arriba: Franja blanca',10d,13d,'$'
-  msgFlechaAbajo db '       Abajo: Franja roja',10d,13d,'$'
-  msgFlechaIzquierda db '       Izquierda: Franja azul',10d,13d,'$'
-  msgFlechaDerecha db '       Derecha: Estrella',10d,10d,13d,'$'
-  msgContinuar db '     Presionelas para dibujar o ESC para salir',10d,'$'
+  msgIndicaciones db "Para que aparezca la bandera presione las flechas:", '$'
+  msgFlechaArriba db "Arriba: Franja blanca", '$'
+  msgFlechaAbajo db "Abajo: Franja roja", '$'
+  msgFlechaIzquierda db "Izquierda: Franja azul", '$'
+  msgFlechaDerecha db "Derecha: Estrella", '$'
+  msgContinuar db "Presionelas para dibujar o ESC para salir", '$'
   varValidar1 db 0b
   varValidar2 db 0b
 
@@ -21,8 +21,10 @@ inicio proc near
  call INDICACIONES
 
  SIGUIENTE:
- call ubicar
- call tecla
+ mov dh,33d
+ mov dl,60d
+ call UBICAR
+ call TECLA
 
  cmp ah,01h  ; esc
  je FIN
@@ -54,27 +56,49 @@ inicio proc near
   jmp SIGUIENTE
 
  FIN:
- call limpiarbandera
- call ubicar
+ call LIMPIARBANDERA
 
  .exit
 inicio endp 
 
-INDICACIONES proc
+INDICACIONES proc near
  call limpiar
- call ubicar
+
+ mov dh,03d
+ mov dl,08d
+ call UBICAR
  mov dx,offset msgIndicaciones
- call mostrar
+ call MOSTRAR
+
+ mov dh,05d
+ mov dl,10d
+ call UBICAR
  mov dx,offset msgFlechaArriba
- call mostrar
+ call MOSTRAR
+
+ mov dh,07d
+ mov dl,10d
+ call UBICAR
  mov dx,offset msgFlechaAbajo
- call mostrar
+ call MOSTRAR
+
+ mov dh,09d
+ mov dl,10d
+ call UBICAR
  mov dx,offset msgFlechaIzquierda
- call mostrar
+ call MOSTRAR
+
+ mov dh,11d
+ mov dl,10d
+ call UBICAR 
  mov dx,offset msgFlechaDerecha
- call mostrar
+ call MOSTRAR
+
+ mov dh,13d
+ mov dl,10d
+ call UBICAR 
  mov dx,offset msgContinuar
- call mostrar
+ call MOSTRAR
  ret 
 INDICACIONES endp
 
@@ -224,8 +248,6 @@ LIMPIARBANDERA endp
 UBICAR PROC NEAR
  mov ah,02H
  mov bh,00H
- mov dh,0h
- mov dl,05h
  INT 10H
  RET
 UBICAR ENDP
@@ -238,10 +260,10 @@ MOSTRAR PROC NEAR
 MOSTRAR ENDP
 
 ;****************************************
-tecla proc near  
+TECLA proc near  
   mov ah,10H
   int 16h  
   ret
-tecla endp
+TECLA endp
 
 end inicio
