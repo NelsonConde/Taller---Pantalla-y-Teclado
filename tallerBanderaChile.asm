@@ -38,32 +38,19 @@ inicio proc near
  jmp SIGUIENTE
 
  subir:
-  cmp varValidar1,0
-  je primeraVez
-  jmp segundaVez
-  primeraVez:
-    call PINTAR11
-    inc varValidar1
-  segundaVez:
-    call PINTAR12
+  call PINTARBLANCO
   jmp SIGUIENTE
  
  bajar:
-  call PINTAR2
+  call PINTARROJO
   jmp SIGUIENTE
 
  izqui:
-  cmp varValidar2,0
-  je primeraVezz
-  jmp segundaVezz
-  primeraVezz:
-    call PINTAR3
-    inc varValidar2
-  segundaVezz:
+  call PINTARAZUL
   jmp SIGUIENTE
 
  dere:
-  call PINTAR4
+  call PINTARESTRELLA
   jmp SIGUIENTE
 
  FIN:
@@ -92,7 +79,7 @@ INDICACIONES proc
 INDICACIONES endp
 
 ;****************************************
-PINTAR11 proc near
+PINTARBLANCO proc near
   mov ax,0600h
   mov bh,0f0h  ;color
   mov ch,00d      ;inicio de color
@@ -101,21 +88,10 @@ PINTAR11 proc near
   mov dl,80d
 	int 10H               	
   ret 
-PINTAR11 endp
-
-PINTAR12 proc near
-  mov ax,0600h
-  mov bh,0f0h  ;color
-  mov ch,0d
-  mov cl,27d  
-  mov dh,12d      
-  mov dl,80d
-	int 10H               	
-  ret 
-PINTAR12 endp
+PINTARBLANCO endp
 
 ;****************************************
-PINTAR2 proc near
+PINTARROJO proc near
   mov ax,0600h
   mov bh,40h  ;color
   mov ch,13d
@@ -124,10 +100,10 @@ PINTAR2 proc near
   mov dl,80d  ;columna
 	int 10H               	
   ret 
-PINTAR2 endp
+PINTARROJO endp
 
 ;****************************************
-PINTAR3 proc near
+PINTARAZUL proc near
   mov ax,0600h
   mov bh,10h  ;color
   mov ch,00d      
@@ -136,10 +112,10 @@ PINTAR3 proc near
   mov dl,26d  ;columna
 	int 10H               	
   ret 
-PINTAR3 endp
+PINTARAZUL endp
 
 ;****************************************
-PINTAR4 proc near
+PINTARESTRELLA proc near
   mov ax,0600h
   mov bh,0f0h  ;color
 
@@ -222,12 +198,12 @@ PINTAR4 proc near
   int 10H
 
   ret 
-PINTAR4 endp
+PINTARESTRELLA endp
 
 ;****************************************
 LIMPIAR proc near         
   mov ax,0600h 
-  mov bh,1fh
+  mov bh,0fh
   mov cx,0000h                   
   mov dx,184FH         	  
   int 10h                  	
